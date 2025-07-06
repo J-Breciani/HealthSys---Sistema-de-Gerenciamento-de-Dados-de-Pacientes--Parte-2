@@ -26,8 +26,8 @@ O sistema oferece funcionalidades de **Cadastro, Consulta, Atualização, Remoç
 
 1️⃣ Clone o repositório:
 ```bash
-git clone https://github.com/J-Breciani/HealthSys---Sistema-de-Gerenciamento-de-Dados-de-Pacientes--Parte-2.git
-cd HealthSys---Sistema-de-Gerenciamento-de-Dados-de-Pacientes--Parte-2
+git clone https://github.com/J-Breciani/HealthSys-Parte2.git
+cd HealthSys-Parte2
 ```
 2️⃣ Compile o projeto:
 ```bash
