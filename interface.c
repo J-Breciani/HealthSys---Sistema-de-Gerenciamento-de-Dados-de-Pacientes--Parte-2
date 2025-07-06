@@ -83,71 +83,76 @@ void ui_consultarPaciente(BDPaciente* bd) {
 }
 
 /* --- Função de Atualização de Paciente --- */
-void ui_atualizarPaciente(BDPaciente* bd) { // Recebe o ponteiro para o banco de dados
-    printf(CLR_YELLOW "Digite o ID do registro a ser atualizado: " CLR_RESET); // Solicita o ID ao usuário
-    int id; // Variável para armazenar o ID
+void ui_atualizarPaciente(BDPaciente* bd) {
+    printf(CLR_YELLOW "Digite o ID do registro a ser atualizado: " CLR_RESET);
+    int id;
     scanf("%d", &id);
     limparBuffer();
 
-    
-    /* Verifica se o paciente foi encontrado */
     PacienteNode* node = bd_find_by_id(bd, id);
-    if (node == NULL) { // Se não foi encontrado, imprime mensagem de erro
+    if (node == NULL) {
         printf(CLR_RED "Erro: Paciente com ID %d nao encontrado.\n" CLR_RESET, id);
-    } else { // Se foi encontrado:
-        Paciente temp_info = bd_get_paciente_info(node); // Pega as informações do paciente
-        printf("Paciente encontrado: %s\n", temp_info.nome); // Imprime o nome do paciente
-        printf("Digite os novos valores (para manter, digite '-'):\n"); // Solicita os novos valores ao usuário
+    } else {
+        Paciente temp_info = bd_get_paciente_info(node);
+        printf("Paciente encontrado: %s\n", temp_info.nome);
+        printf("Digite os novos valores (para manter, digite '-'):\n");
 
-        char n_cpf[50], n_nome[100], n_idade_str[50], cpf_formatado[15]; // Variáveis para armazenar os novos valores
+        char n_cpf[50], n_nome[100], n_idade_str[50], n_data_str[50], cpf_formatado[15];
 
-        /* Leitura e validação dos novos valores */
         do {
-            printf(CLR_YELLOW "CPF (11 digitos ou '-'): " CLR_RESET); // Solicita o CPF ao usuário
-            fgets(n_cpf, sizeof(n_cpf), stdin); n_cpf[strcspn(n_cpf, "\n")] = 0; // Leitura do CPF e remoção do caractere de nova linha
+            printf(CLR_YELLOW "CPF (11 digitos ou '-'): " CLR_RESET);
+            fgets(n_cpf, sizeof(n_cpf), stdin);
+            n_cpf[strcspn(n_cpf, "\n")] = 0;
 
-            if (strcmp(n_cpf, "-") == 0) break; // Se for '-', sai do loop
+            if (strcmp(n_cpf, "-") == 0) break;
 
-            if (!validarCPF(n_cpf)) {// Verifica se o CPF é válido
+            if (!validarCPF(n_cpf)) {
                 printf(CLR_RED "ERRO: Formato de CPF invalido! Tente novamente.\n" CLR_RESET);
-                continue; // Volta ao início do loop
+                continue;
             }
 
-            /* Verifica se o CPF já está cadastrado */
             formatarCPF(n_cpf, cpf_formatado);
-            PacienteNode* existente = bd_find_by_cpf(bd, cpf_formatado); // Procura o CPF no banco de dados
-            if (existente != NULL && bd_get_paciente_info(existente).id != id) { // Verifica se o CPF já está cadastrado em outro paciente
-                 printf(CLR_RED "ERRO: CPF ja pertence a outro paciente! Tente novamente.\n" CLR_RESET);
-                 strcpy(n_cpf, "invalido"); // Força o loop a continuar
+            PacienteNode* existente = bd_find_by_cpf(bd, cpf_formatado);
+            if (existente != NULL && bd_get_paciente_info(existente).id != id) {
+                printf(CLR_RED "ERRO: CPF ja pertence a outro paciente! Tente novamente.\n" CLR_RESET);
+                strcpy(n_cpf, "invalido");
             }
-        } while (strcmp(n_cpf, "-") != 0 && !validarCPF(n_cpf)); // Continua o loop até que o CPF seja válido ou o usuário digite '-'
+        } while (strcmp(n_cpf, "-") != 0 && !validarCPF(n_cpf));
 
-        printf(CLR_YELLOW "Nome (ou '-'): " CLR_RESET); // Solicita o nome ao usuário
-        fgets(n_nome, sizeof(n_nome), stdin); n_nome[strcspn(n_nome, "\n")] = 0; // Leitura do nome e remoção do caractere de nova linha
+        printf(CLR_YELLOW "Nome (ou '-'): " CLR_RESET);
+        fgets(n_nome, sizeof(n_nome), stdin);
+        n_nome[strcspn(n_nome, "\n")] = 0;
 
-        /* Leitura e validação da idade */
-        do { 
-            printf(CLR_YELLOW "Idade (ou '-'): " CLR_RESET); // Solicita a idade ao usuário
-            fgets(n_idade_str, sizeof(n_idade_str), stdin); n_idade_str[strcspn(n_idade_str, "\n")] = 0; // Leitura da idade e remoção do caractere de nova linha
-            if (strcmp(n_idade_str, "-") != 0 && !validarIdade(n_idade_str)) { // Verifica se a idade é válida
+        do {
+            printf(CLR_YELLOW "Idade (ou '-'): " CLR_RESET);
+            fgets(n_idade_str, sizeof(n_idade_str), stdin);
+            n_idade_str[strcspn(n_idade_str, "\n")] = 0;
+            if (strcmp(n_idade_str, "-") != 0 && !validarIdade(n_idade_str)) {
                 printf(CLR_RED "ERRO: Idade invalida! Tente novamente.\n" CLR_RESET);
             }
-        } while (strcmp(n_idade_str, "-") != 0 && !validarIdade(n_idade_str));// Continua o loop até que a idade seja válida ou o usuário digite '-'
+        } while (strcmp(n_idade_str, "-") != 0 && !validarIdade(n_idade_str));
 
-        if(strcmp(n_cpf, "-") != 0) strcpy(temp_info.cpf, cpf_formatado); // Copia o CPF formatado para a estrutura do paciente
-        if(strcmp(n_nome, "-") != 0) strcpy(temp_info.nome, n_nome); // Copia o nome para a estrutura do paciente
-        if(strcmp(n_idade_str, "-") != 0) temp_info.idade = atoi(n_idade_str); // Copia a idade para a estrutura do paciente
+        printf(CLR_YELLOW "Data de cadastro (AAAA-MM-DD ou '-'): " CLR_RESET);
+        fgets(n_data_str, sizeof(n_data_str), stdin);
+        n_data_str[strcspn(n_data_str, "\n")] = 0;
+
+        if(strcmp(n_cpf, "-") != 0) strcpy(temp_info.cpf, cpf_formatado);
+        if(strcmp(n_nome, "-") != 0) strcpy(temp_info.nome, n_nome);
+        if(strcmp(n_idade_str, "-") != 0) temp_info.idade = atoi(n_idade_str);
+        if(strcmp(n_data_str, "-") != 0) strncpy(temp_info.data_cadastro, n_data_str, sizeof(temp_info.data_cadastro)-1);
+
+        temp_info.data_cadastro[sizeof(temp_info.data_cadastro)-1] = '\0'; // Segurança
 
         printf("\nConfirma os novos valores para o registro abaixo? (S/N)\n");
-        imprimir_paciente(&temp_info); // Imprime as novas informações do paciente
-        char conf; // Variável para armazenar a confirmação
-        scanf(" %c", &conf); limparBuffer();
+        imprimir_paciente(&temp_info);
+        char conf;
+        scanf(" %c", &conf);
+        limparBuffer();
 
-        /* Verifica a confirmação e atualiza o paciente no banco de dados */
         if (conf == 'S' || conf == 's') {
-            bd_update_node_info(node, temp_info);  // Atualiza as informações do paciente no nó
+            bd_update_node_info(node, temp_info);
             printf(CLR_GREEN "Registro atualizado com sucesso.\n" CLR_RESET);
-            bd_save_csv(bd, "bd_paciente.csv");  // Salva o banco de dados no arquivo
+            bd_save_csv(bd, "bd_paciente.csv");
         } else {
             printf(CLR_YELLOW "Atualizacao cancelada.\n" CLR_RESET);
         }
@@ -186,76 +191,82 @@ void ui_removerPaciente(BDPaciente* bd) { // Recebe o ponteiro para o banco de d
     pausarExecucao(); // Pausa a execução
 }
 /* --- Função de Inserção de Paciente --- */
-void ui_inserirPaciente(BDPaciente* bd) { // Recebe o ponteiro para o banco de dados
-    Paciente p; // Cria uma variável para armazenar os dados do paciente
-    char cpf_temp[50], idade_temp[50], cpf_formatado[15];
+void ui_inserirPaciente(BDPaciente* bd) {
+    Paciente p;
+    char cpf_temp[50], idade_temp[50], cpf_formatado[15], data_temp[50];
 
     printf(CLR_CYAN "\n--- Inserir Novo Paciente ---\n" CLR_RESET);
 
-    /* Leitura e validação dos dados */
-    do {  // Loop para ler e validar o CPF
+    /* Leitura e validação do CPF */
+    do {
         printf(CLR_YELLOW "CPF (apenas 11 digitos): " CLR_RESET);
-        fgets(cpf_temp, sizeof(cpf_temp), stdin); // Leitura do CPF
-        cpf_temp[strcspn(cpf_temp, "\n")] = 0; // Remove o caractere de nova linha
+        fgets(cpf_temp, sizeof(cpf_temp), stdin);
+        cpf_temp[strcspn(cpf_temp, "\n")] = 0;
 
-        /* Verifica se o CPF é válido */
-        if (!validarCPF(cpf_temp)) { 
+        if (!validarCPF(cpf_temp)) {
             printf(CLR_RED "ERRO: CPF invalido! Deve conter exatamente 11 digitos numericos. Tente novamente.\n" CLR_RESET);
-            continue; // Volta ao início do loop
+            continue;
         }
-    
-        formatarCPF(cpf_temp, cpf_formatado); // Formata o CPF para o padrão XXX.XXX.XXX-XX
 
-        /* Verifica se o CPF já está cadastrado */
+        formatarCPF(cpf_temp, cpf_formatado);
         if (bd_find_by_cpf(bd, cpf_formatado) != NULL) {
             printf(CLR_RED "ERRO: CPF ja cadastrado no sistema! Tente novamente.\n" CLR_RESET);
             strcpy(cpf_temp, "invalido");
         }
-    } while (!validarCPF(cpf_temp)); // Continua o loop até que o CPF seja válido
+    } while (!validarCPF(cpf_temp));
 
     /* Leitura e validação do nome */
     do {
-        printf(CLR_YELLOW "Nome: " CLR_RESET); // Solicita o nome ao usuário
-        fgets(p.nome, sizeof(p.nome), stdin); // Leitura do nome
-        p.nome[strcspn(p.nome, "\n")] = 0; // Remove o caractere de nova linha
-        if (strlen(p.nome) == 0) { // Verifica se o nome está vazio
+        printf(CLR_YELLOW "Nome: " CLR_RESET);
+        fgets(p.nome, sizeof(p.nome), stdin);
+        p.nome[strcspn(p.nome, "\n")] = 0;
+        if (strlen(p.nome) == 0) {
             printf(CLR_RED "ERRO: O nome nao pode ser vazio. Tente novamente.\n" CLR_RESET);
         }
-    } while (strlen(p.nome) == 0); // Continua o loop até que o nome seja válido
+    } while (strlen(p.nome) == 0);
 
     /* Leitura e validação da idade */
     do {
-        printf(CLR_YELLOW "Idade: " CLR_RESET); // Solicita a idade 
-        fgets(idade_temp, sizeof(idade_temp), stdin); // Leitura da idade
-        idade_temp[strcspn(idade_temp, "\n")] = 0; // Remove o caractere de nova linha
-        if (!validarIdade(idade_temp)) { // Verifica se a idade é válida
+        printf(CLR_YELLOW "Idade: " CLR_RESET);
+        fgets(idade_temp, sizeof(idade_temp), stdin);
+        idade_temp[strcspn(idade_temp, "\n")] = 0;
+        if (!validarIdade(idade_temp)) {
             printf(CLR_RED "ERRO: Idade invalida! Use apenas numeros. Tente novamente.\n" CLR_RESET);
         }
-    } while (!validarIdade(idade_temp)); // Continua o loop até que a idade seja válida
-    p.idade = atoi(idade_temp); // Converte a idade para inteiro
+    } while (!validarIdade(idade_temp));
+    p.idade = atoi(idade_temp);
 
-    time_t tempo_atual; // Variável para armazenar o tempo atual
-    struct tm *info_tempo; // Ponteiro para a estrutura de tempo
-    time(&tempo_atual); // Obtém o tempo atual
-    info_tempo = localtime(&tempo_atual); // Converte o tempo atual para a estrutura de tempo
-    strftime(p.data_cadastro, sizeof(p.data_cadastro), "%Y-%m-%d", info_tempo); // Formata a data de cadastro para o padrão AAAA-MM-DD
+    /* Leitura e validação da data de cadastro */
+    printf(CLR_YELLOW "Data de cadastro (AAAA-MM-DD ou '-' para data atual): " CLR_RESET);
+    fgets(data_temp, sizeof(data_temp), stdin);
+    data_temp[strcspn(data_temp, "\n")] = 0;
+    if (strcmp(data_temp, "-") == 0) {
+        time_t tempo_atual;
+        struct tm *info_tempo;
+        time(&tempo_atual);
+        info_tempo = localtime(&tempo_atual);
+        strftime(p.data_cadastro, sizeof(p.data_cadastro), "%Y-%m-%d", info_tempo);
+    } else {
+        strncpy(p.data_cadastro, data_temp, sizeof(p.data_cadastro));
+        p.data_cadastro[sizeof(p.data_cadastro) - 1] = '\0'; // segurança no final da string
+    }
 
-    p.id = bd_get_proximo_id(bd); // Obtém o próximo ID disponível
-    strcpy(p.cpf, cpf_formatado); // Copia o CPF formatado para a estrutura do paciente
+    p.id = bd_get_proximo_id(bd);
+    strcpy(p.cpf, cpf_formatado);
 
-    printf("\nConfirma a insercao do registro abaixo? (S/N)\n"); // Solicita a confirmação ao usuário
-    imprimir_paciente(&p); // Imprime os dados do paciente
+    printf("\nConfirma a insercao do registro abaixo? (S/N)\n");
+    imprimir_paciente(&p);
 
-    char conf; // Variável para armazenar a confirmação
-    scanf(" %c", &conf); limparBuffer();
+    char conf;
+    scanf(" %c", &conf);
+    limparBuffer();
 
-    /* Verifica a confirmação e insere o paciente no banco de dados */
     if (conf == 'S' || conf == 's') {
         bd_append(bd, p);
         printf(CLR_GREEN "Registro inserido com sucesso.\n" CLR_RESET);
         bd_save_csv(bd, "bd_paciente.csv");
     } else {
-        printf(CLR_YELLOW "Insercao cancelada.\n" CLR_RESET);
+        printf(CLR_YELLOW "Inserção cancelada.\n" CLR_RESET);
     }
     pausarExecucao();
 }
