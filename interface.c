@@ -11,7 +11,18 @@ void limparBuffer() { int c; while ((c = getchar()) != '\n' && c != EOF); }
 void pausarExecucao() { printf("\n" CLR_YELLOW "Pressione ENTER para continuar..." CLR_RESET); getchar(); }
 void formatarCPF(const char* o, char* d) { sscanf(o, "%3s%3s%3s%2s", d, d+4, d+8, d+12); d[3]=d[7]='.'; d[11]='-'; d[14]='\0'; }
 int validarCPF(const char* cpf_str) { if (strlen(cpf_str) != 11) { return 0; } for (int i = 0; i < 11; i++) { if (!isdigit(cpf_str[i])) { return 0; } } return 1; }
-int validarIdade(const char* idade_str) { if (strlen(idade_str) == 0) { return 0; } for (int i = 0; i < strlen(idade_str); i++) { if (!isdigit(idade_str[i])) { return 0; } } return 1; }
+int validarIdade(const char* idade_str) {
+    if (strlen(idade_str) == 0) {
+        return 0;
+    }
+    size_t len = strlen(idade_str);
+    for (size_t i = 0; i < len; i++) {
+        if (!isdigit((unsigned char)idade_str[i])) {
+            return 0;
+        }
+    }
+    return 1;
+}
 
 void limparTela() {
     // Comando para limpar a tela em sistemas baseados em Unix (Linux, macOS) e Windows
