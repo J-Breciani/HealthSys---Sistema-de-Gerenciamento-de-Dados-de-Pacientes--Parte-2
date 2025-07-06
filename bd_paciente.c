@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "bd_paciente.h"
+#include "interface.h"
 
 /* Estruturas internas */
 
