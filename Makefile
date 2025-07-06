@@ -4,7 +4,7 @@ CFLAGS = -Wall -Wextra -std=c11 -g  # Ativa warnings, padrão C11 e debug symbol
 LDFLAGS = -lm  # Linkagem com math.h (se necessário)
 
 # Nome do executável final
-TARGET = programa
+TARGET = healthsys
 
 # Arquivos fonte (.c) e objetos (.o)
 SRCS = main.c bd_paciente.c paciente.c interface.c
