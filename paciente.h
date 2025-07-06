@@ -7,7 +7,7 @@ typedef struct {
     char cpf[15]; // CPF do paciente (string)
     char nome[100]; // Nome do paciente
     int idade; // Idade do paciente
-    char data_cadastro[11]; // Data de cadastro do paciente (formato DD/MM/AAAA)
+    char data_cadastro[11]; // Data de cadastro do paciente (formato AAAA-MM-DD)
 } Paciente; 
 
 // Função para imprimir as informações do paciente.
