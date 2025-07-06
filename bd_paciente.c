@@ -148,7 +148,7 @@ PacienteNode* bd_find_by_id(BDPaciente* bd, int id) {
             return p; //Retorna o nó
         }
     }
-    return NULL;
+    return NULL; 
 }
 
 /* Função para pegar o próximo ID */
