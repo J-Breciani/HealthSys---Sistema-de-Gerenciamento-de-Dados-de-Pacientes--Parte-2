@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>  // Para strncasecmp
 #include <ctype.h>
 #include <time.h>
 #include "interface.h"
