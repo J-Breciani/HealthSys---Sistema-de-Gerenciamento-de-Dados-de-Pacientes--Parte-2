@@ -1,14 +1,16 @@
 #ifndef PACIENTE_H
 #define PACIENTE_H
 
-/* Define o tamanho máximo para os campos de texto */
-#define MAX_NOME 100
-#define MAX_CPF 15 // Precisa incluir . e -
-#define MAX_DATA 11  // // Formato AAAA-MM-DD
+// Define a estrutura para armazenar os dados de um único paciente
+typedef struct {
+    int id; // Identificador único do paciente
+    char cpf[15]; // CPF do paciente (string)
+    char nome[100]; // Nome do paciente
+    int idade; // Idade do paciente
+    char data_cadastro[11]; // Data de cadastro do paciente (formato DD/MM/AAAA)
+} Paciente; 
 
-
-void imprimir_paciente(const Paciente *p);
+// Função para imprimir as informações do paciente.
+void imprimir_paciente(const Paciente* p);
 
 #endif // PACIENTE_H
-/* ifndef verifica se o arquivo já foi incluído, se não foi, ele inclui. 
-Assim, evita uma declaração dupla, porque se já foi incluido, retorna uma blank file.*/

@@ -1,60 +1,26 @@
 #include <stdio.h>
-#include <stdlib.h> // Para EXIT_SUCCESS e EXIT_FAILURE
-
-/* Nossos módulos */
-#include "paciente.h"    // Embora não usemos diretamente Paciente aqui, os outros módulos dependem dele.
-#include "bd_paciente.h" // Para gerenciar o banco de dados de pacientes
-#include "interface.h"   // Para todas as interações com o usuário
-
-/* Constantes definidas para o programa principal */
-#define ARQUIVO_CSV "bd_paciente.csv"
-#define ITENS_POR_PAGINA 10
+#include "bd_paciente.h"
+#include "interface.h"
 
 int main() {
-    BDPaciente banco_de_dados; // Nossa estrutura principal para armazenar os dados
-    char opcao_menu;
+    /* Constante com o nome do arquivo CSV */
+    const char* NOME_ARQUIVO = "bd_paciente.csv";
 
-    /* 1. Inicializar o TAD BDPaciente */
-    inicializar_bd(&banco_de_dados); // Define a quantidade_atual de pacientes como 0.
+    /* 1. Cria o banco de dados em memória */
+    BDPaciente* banco = bd_create();
 
-    /* 2. Carregar os dados do arquivo CSV para a memória */
-    if (!carregar_dados_csv(&banco_de_dados, ARQUIVO_CSV)) {
-        exibir_mensagem_erro("Falha ao carregar dados do arquivo CSV. Verifique se 'bd_paciente.csv' existe e esta formatado corretamente.");
-        return EXIT_FAILURE; // Termina o programa se não conseguir carregar os dados
-    }
-   
+    /* 2. Carrega os dados do arquivo para a memória */
+    bd_load_csv(banco, NOME_ARQUIVO);
 
-    // 3. Loop principal do menu
-    do {
-        limpar_tela();
-        exibir_menu_principal(); // Mostra as opções: 1-Consultar, 5-Imprimir, Q-Sair
-        opcao_menu = obter_opcao_menu_principal(); // Pega a escolha do usuário
+    /* 3. Inicia a interface com o usuário, que gerencia o programa */
+    iniciarLoopPrincipal(banco);
 
-        limpar_tela(); // Limpa a tela antes de processar a opção
+    /* 4. Salva os dados de volta no arquivo ao sair */
+    bd_save_csv(banco, NOME_ARQUIVO);
+    printf("Dados salvos em '%s'. Programa encerrado.\n", NOME_ARQUIVO);
 
-        switch (opcao_menu) {
-            case '1': // Consultar paciente
-                processar_opcao_consulta(&banco_de_dados);
-                // A função processar_opcao_consulta já inclui pausas internas.
-                break;
+    /* 5. Libera toda a memória alocada dinamicamente */
+    bd_free(banco);
 
-            case '5': // Imprimir lista de pacientes
-                exibir_mensagem("Imprimindo lista de pacientes...");
-                imprimir_lista_pacientes_paginada(&banco_de_dados, ITENS_POR_PAGINA);
-                pausar_execucao(); // Pausa após a listagem completa
-                break;
-
-            case 'Q': // Sair do sistema
-                exibir_mensagem("Encerrando o HealthSys. Ate logo!");
-                break;
-
-            default: // Opção inválida
-                exibir_mensagem_erro("Opcao invalida! Por favor, escolha uma das opcoes do menu.");
-                pausar_execucao(); // Pausa para o usuário ler a mensagem de erro
-                break;
-        }
-
-    } while (opcao_menu != 'Q');
-
-    return EXIT_SUCCESS; // Indica que o programa terminou com sucesso
+    return 0;
 }
