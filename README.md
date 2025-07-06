@@ -51,6 +51,7 @@ gcc main.c interface.c bd_paciente.c paciente.c -o healthsys
 ```
 .
 ├── main.c               # Ponto de entrada
+├── Makefile             # Makefile
 ├── paciente.h           # Definição do struct Paciente
 ├── paciente.c           # Funções auxiliares (se houver)
 ├── bd_paciente.h/.c     # TAD da lista encadeada de pacientes
