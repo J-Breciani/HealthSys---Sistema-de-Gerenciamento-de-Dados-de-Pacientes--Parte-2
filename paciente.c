@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "paciente.h"
+#include "interface.h"
 
 /* Função para imprimir as informações do paciente */
 void imprimir_paciente(const Paciente* p) { 
