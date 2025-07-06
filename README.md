@@ -31,7 +31,7 @@ cd HealthSys-Parte2
 ```
 2️⃣ Compile o projeto:
 ```bash
-gcc main.c interface.c bd_paciente.c paciente.c -o healthsys
+make
 ```
 3️⃣ Garanta que o arquivo `bd_paciente.csv` esteja no diretório do executável. Se não existir, o sistema criará um novo ao salvar.
 
