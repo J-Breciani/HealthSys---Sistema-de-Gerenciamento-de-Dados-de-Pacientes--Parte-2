@@ -12,6 +12,8 @@
 #define CLR_CYAN    "\x1b[36m"
 
 /* Função para pausar a execução do programa */
+void pausarExecucao();
+
 void iniciarLoopPrincipal(BDPaciente* bd);
 
 #endif // INTERFACE_H
